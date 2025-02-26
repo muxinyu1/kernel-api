@@ -53,7 +53,7 @@ func main() {
 // @Success 200 {object} map[string]string
 // @Router /start [post]
 func start(c *gin.Context) {
-	cmd := exec.Command("bash", "-c", "kernel", "start")
+	cmd := exec.Command("bash", "-c", "kernel start")
 	err := cmd.Run()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -75,7 +75,7 @@ func start(c *gin.Context) {
 // @Success 200 {object} map[string]string
 // @Router /stop [post]
 func stop(c *gin.Context) {
-	cmd := exec.Command("bash", "-c", "kernel", "stop")
+	cmd := exec.Command("bash", "-c", "kernel stop")
 	err := cmd.Run()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -97,7 +97,7 @@ func stop(c *gin.Context) {
 // @Success 200 {object} map[string]string
 // @Router /restart [post]
 func restart(c *gin.Context) {
-	cmd := exec.Command("bash", "-c", "kernel", "restart")
+	cmd := exec.Command("bash", "-c", "kernel restart")
 	err := cmd.Run()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -119,7 +119,7 @@ func restart(c *gin.Context) {
 // @Success 200 {object} map[string]string
 // @Router /status [get]
 func status(c *gin.Context) {
-	cmd := exec.Command("bash", "-c", "kernel", "status")
+	cmd := exec.Command("bash", "-c", "kernel status")
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -160,7 +160,7 @@ func setDomain(c *gin.Context) {
 		})
 		return
 	}
-	cmd := exec.Command("bash", "-c", "kernel", "--set-domain", req.Domain)
+	cmd := exec.Command("bash", "-c", "kernel --set-domain" + req.Domain)
 	err := cmd.Run()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -201,7 +201,7 @@ func setIp(c *gin.Context) {
 		})
 		return
 	}
-	cmd := exec.Command("bash", "-c", "kernel", "--set-ip", req.IPPlan)
+	cmd := exec.Command("bash", "-c", "kernel --set-ip" + req.IPPlan)
 	err := cmd.Run()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
