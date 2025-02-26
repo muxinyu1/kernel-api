@@ -26,16 +26,15 @@ jobs:
           GOOS=linux GOARCH=amd64 go build -o kernel-api
           zip -r kernel-api.zip kernel-api
 
-
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: kernel-api-linux-x64  # 构建产物名称
           path: kernel-api 
-      
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+
+      - name: Create or Update Release
+        id: create_or_update_release
+        uses: actions/create-or-update-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -43,6 +42,7 @@ jobs:
           release_name: ${{ github.ref_name }}  # Release名称
           draft: false  # 是否为草稿
           prerelease: false  # 是否为预发布
+          body: "Automated release from GitHub Actions"
 
       - name: Upload Release Asset
         id: upload-release-asset
@@ -50,7 +50,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}  # 从创建Release步骤获取上传URL
+          upload_url: ${{ steps.create_or_update_release.outputs.upload_url }}  # 从创建或更新Release步骤获取上传URL
           asset_path: ./kernel-api.zip  # 构建产物路径
           asset_name: kernel-api-${{ github.ref_name }}.zip  # 构建产物名称
           asset_content_type: application/zip  # 文件类型
