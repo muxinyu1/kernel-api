@@ -22,7 +22,7 @@ jobs:
         run: go get -v ./...
 
       - name: Build for Linux x64
-        run: GOOS=linux GOARCH=amd64 go build -o kernel-api ./...
+        run: GOOS=linux GOARCH=amd64 go build -o kernel-api
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
