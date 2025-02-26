@@ -40,7 +40,6 @@ jobs:
           release_name: ${{ github.ref_name }}  # Release名称
           draft: false  # 是否为草稿
           prerelease: false  # 是否为预发布
-          generate_release_notes: true  # 自动生成发布说明
 
       - name: Upload Release Asset
         id: upload-release-asset
