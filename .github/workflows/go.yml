@@ -1,4 +1,4 @@
-name: Go Build and Test
+name: Go Build and Release
 
 on:
   push:
@@ -7,41 +7,63 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest  # 使用最新的Ubuntu运行器
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23.2'  # 更新为实际存在的Go版本
-
+          go-version: '1.21.0'  # 使用实际存在的 Go 版本
+      
       - name: Install dependencies
         run: go get -v ./...
-        
+            
       - name: Run tests
         run: go test -v ./...
-
-      - name: Build for Linux x64
+      
+      - name: Build for multiple platforms
         run: |
-          GOOS=linux GOARCH=amd64 go build -o kernel-api
-          zip -r kernel-api.zip kernel-api
-
-      - name: Upload artifact
+          mkdir -p bin
+          make all
+          
+      - name: Create release zip files
+        run: |
+          cd bin
+          zip -r ../kernel-api-linux-amd64.zip kernel-api-linux-amd64
+          zip -r ../kernel-api-windows-amd64.zip kernel-api-windows-amd64.exe
+          zip -r ../kernel-api-darwin-amd64.zip kernel-api-darwin-amd64
+          cd ..
+      
+      - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
-          name: kernel-api-linux-x64  # 构建产物名称
-          path: kernel-api 
+          name: kernel-api-linux-amd64
+          path: bin/kernel-api-linux-amd64
       
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-api-windows-amd64
+          path: bin/kernel-api-windows-amd64.exe
+      
+      - name: Upload MacOS artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-api-darwin-amd64
+          path: bin/kernel-api-darwin-amd64
+          
       - name: Create/Update Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref_name }}
-          name: ${{ github.ref_name }}
+          tag_name: v${{ github.run_number }}  # 使用运行编号作为版本号
+          name: Release v${{ github.run_number }}
           files: |
-            ./kernel-api.zip
+            ./kernel-api-linux-amd64.zip
+            ./kernel-api-windows-amd64.zip
+            ./kernel-api-darwin-amd64.zip
           draft: false
           prerelease: false
           fail_on_unmatched_files: true
