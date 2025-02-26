@@ -22,7 +22,7 @@ jobs:
         run: go get -v ./...
 
       - name: Build for Linux x64
-        run:
+        run: |
           GOOS=linux GOARCH=amd64 go build -o kernel-api
           zip -r kernel-api.zip kernel-api
 
