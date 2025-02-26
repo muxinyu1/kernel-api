@@ -22,7 +22,10 @@ jobs:
         run: go get -v ./...
 
       - name: Build for Linux x64
-        run: GOOS=linux GOARCH=amd64 go build -o kernel-api
+        run:
+          GOOS=linux GOARCH=amd64 go build -o kernel-api
+          zip -r kernel-api.zip kernel-api
+
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
@@ -48,6 +51,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}  # 从创建Release步骤获取上传URL
-          asset_path: ./kernel-api  # 构建产物路径
-          asset_name: kernel-api-linux-x64  # 构建产物名称
-          asset_content_type: application/octet-stream  # 文件类型
+          asset_path: ./kernel-api.zip  # 构建产物路径
+          asset_name: kernel-api-${{ github.ref_name }}.zip  # 构建产物名称
+          asset_content_type: application/zip  # 文件类型
