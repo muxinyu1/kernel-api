@@ -124,7 +124,7 @@ func status(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"status":  "error",
-			"message": err.Error(),
+			"message": string(output) + err.Error(),
 		})
 		return
 	}
