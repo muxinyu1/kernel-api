@@ -42,6 +42,102 @@ info:
   title: Kernel Service API
   version: "1.0"
 paths:
+  /restart:
+    post:
+      description: Restarts the kernel service asynchronously
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Restart kernel service
+      tags:
+      - Kernel
+  /set-domain:
+    post:
+      consumes:
+      - application/json
+      description: Sets the domain for the kernel service asynchronously
+      parameters:
+      - description: Domain to set
+        in: body
+        name: domain
+        required: true
+        schema:
+          properties:
+            domain:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Set domain for kernel service
+      tags:
+      - Configuration
+  /set-ip:
+    post:
+      consumes:
+      - application/json
+      description: Sets the IP plan for the kernel service asynchronously
+      parameters:
+      - description: IPv4 address to set
+        in: body
+        name: ipv4
+        required: true
+        schema:
+          properties:
+            ipv4:
+              type: string
+          type: object
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Set IP plan for kernel service
+      tags:
+      - Configuration
+  /start:
+    post:
+      description: Starts the kernel service asynchronously
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Start kernel service
+      tags:
+      - Kernel
   /status:
     get:
       description: Returns the current status of the kernel service (asynchronous)
@@ -55,6 +151,21 @@ paths:
               type: string
             type: object
       summary: Get kernel service status
+      tags:
+      - Kernel
+  /stop:
+    post:
+      description: Stops the kernel service asynchronously
+      produces:
+      - application/json
+      responses:
+        "202":
+          description: Accepted
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Stop kernel service
       tags:
       - Kernel
   /task/{id}:

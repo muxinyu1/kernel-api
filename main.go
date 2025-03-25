@@ -155,7 +155,7 @@ func getTaskStatus(c *gin.Context) {
 // @Success 202 {object} map[string]string
 // @Router /status [get]
 func status(c *gin.Context) {
-	task := createTask("\"kernel status\"")
+	task := createTask("kernel status")
 	go executeCommandAsync(task.ID, task.Command)
 	
 	c.JSON(http.StatusAccepted, gin.H{
@@ -165,8 +165,14 @@ func status(c *gin.Context) {
 	})
 }
 
+// @Summary Start kernel service
+// @Description Starts the kernel service asynchronously
+// @Tags Kernel
+// @Produce json
+// @Success 202 {object} map[string]string
+// @Router /start [post]
 func start(c *gin.Context) {
-	task := createTask("\"kernel start\"")
+	task := createTask("kernel start")
 	go executeCommandAsync(task.ID, task.Command)
 	
 	c.JSON(http.StatusAccepted, gin.H{
@@ -176,8 +182,14 @@ func start(c *gin.Context) {
 	})
 }
 
+// @Summary Stop kernel service
+// @Description Stops the kernel service asynchronously
+// @Tags Kernel
+// @Produce json
+// @Success 202 {object} map[string]string
+// @Router /stop [post]
 func stop(c *gin.Context) {
-	task := createTask("\"kernel stop\"")
+	task := createTask("kernel stop")
 	go executeCommandAsync(task.ID, task.Command)
 	
 	c.JSON(http.StatusAccepted, gin.H{
@@ -187,8 +199,14 @@ func stop(c *gin.Context) {
 	})
 }
 
+// @Summary Restart kernel service
+// @Description Restarts the kernel service asynchronously
+// @Tags Kernel
+// @Produce json
+// @Success 202 {object} map[string]string
+// @Router /restart [post]
 func restart(c *gin.Context) {
-	task := createTask("\"kernel restart\"")
+	task := createTask("kernel restart")
 	go executeCommandAsync(task.ID, task.Command)
 	
 	c.JSON(http.StatusAccepted, gin.H{
@@ -198,6 +216,15 @@ func restart(c *gin.Context) {
 	})
 }
 
+// @Summary Set domain for kernel service
+// @Description Sets the domain for the kernel service asynchronously
+// @Tags Configuration
+// @Accept json
+// @Produce json
+// @Param domain body object{domain=string} true "Domain to set"
+// @Success 202 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /set-domain [post]
 func setDomain(c *gin.Context) {
 	var req struct {
 		Domain string `json:"domain"`
@@ -216,7 +243,7 @@ func setDomain(c *gin.Context) {
 		})
 		return
 	}
-	cmdStr := fmt.Sprintf("\"kernel --set-domain %s\"", req.Domain)
+	cmdStr := fmt.Sprintf("kernel --set-domain %s", req.Domain)
 	task := createTask(cmdStr)
 	go executeCommandAsync(task.ID, task.Command)
 	
@@ -227,6 +254,15 @@ func setDomain(c *gin.Context) {
 	})
 }
 
+// @Summary Set IP plan for kernel service
+// @Description Sets the IP plan for the kernel service asynchronously
+// @Tags Configuration
+// @Accept json
+// @Produce json
+// @Param ipv4 body object{ipv4=string} true "IPv4 address to set"
+// @Success 202 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Router /set-ip [post]
 func setIp(c *gin.Context) {
 	var req struct {
 		IPPlan string `json:"ipv4"`
@@ -245,7 +281,7 @@ func setIp(c *gin.Context) {
 		})
 		return
 	}
-	cmdStr := fmt.Sprintf("\"kernel --set-ip %s\"", req.IPPlan)
+	cmdStr := fmt.Sprintf("kernel --set-ip %s", req.IPPlan)
 	task := createTask(cmdStr)
 	go executeCommandAsync(task.ID, task.Command)
 	
