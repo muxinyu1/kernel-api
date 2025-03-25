@@ -17,129 +17,9 @@
     },
     "basePath": "/v1",
     "paths": {
-        "/restart": {
-            "post": {
-                "description": "Restarts the kernel service",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Kernel"
-                ],
-                "summary": "Restart the kernel service",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/set-domain": {
-            "post": {
-                "description": "Sets the domain for the kernel service",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Configuration"
-                ],
-                "summary": "Set domain for the kernel service",
-                "parameters": [
-                    {
-                        "description": "Domain to set",
-                        "name": "domain",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/set-ip": {
-            "post": {
-                "description": "Sets the IP plan for the kernel service",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Configuration"
-                ],
-                "summary": "Set IP plan for the kernel service",
-                "parameters": [
-                    {
-                        "description": "IP plan to set",
-                        "name": "ip_plan",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/start": {
-            "post": {
-                "description": "Starts the kernel service",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Kernel"
-                ],
-                "summary": "Start the kernel service",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "/status": {
             "get": {
-                "description": "Returns the current status of the kernel service",
+                "description": "Returns the current status of the kernel service (asynchronous)",
                 "produces": [
                     "application/json"
                 ],
@@ -148,8 +28,8 @@
                 ],
                 "summary": "Get kernel service status",
                 "responses": {
-                    "200": {
-                        "description": "OK",
+                    "202": {
+                        "description": "Accepted",
                         "schema": {
                             "type": "object",
                             "additionalProperties": {
@@ -160,28 +40,77 @@
                 }
             }
         },
-        "/stop": {
-            "post": {
-                "description": "Stops the kernel service",
+        "/task/{id}": {
+            "get": {
+                "description": "Returns the current status of a task",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "Kernel"
+                    "Task"
                 ],
-                "summary": "Stop the kernel service",
+                "summary": "Get task status",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Task ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "object",
-                            "additionalProperties": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/main.Task"
                         }
                     }
                 }
             }
+        }
+    },
+    "definitions": {
+        "main.Task": {
+            "type": "object",
+            "properties": {
+                "command": {
+                    "type": "string"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "error": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "output": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/main.TaskStatus"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "main.TaskStatus": {
+            "type": "string",
+            "enum": [
+                "pending",
+                "running",
+                "finished",
+                "failed"
+            ],
+            "x-enum-varnames": [
+                "StatusPending",
+                "StatusRunning",
+                "StatusFinished",
+                "StatusFailed"
+            ]
         }
     }
 }

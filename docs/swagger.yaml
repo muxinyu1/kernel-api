@@ -1,4 +1,34 @@
 basePath: /v1
+definitions:
+  main.Task:
+    properties:
+      command:
+        type: string
+      created_at:
+        type: string
+      error:
+        type: string
+      id:
+        type: string
+      output:
+        type: string
+      status:
+        $ref: '#/definitions/main.TaskStatus'
+      updated_at:
+        type: string
+    type: object
+  main.TaskStatus:
+    enum:
+    - pending
+    - running
+    - finished
+    - failed
+    type: string
+    x-enum-varnames:
+    - StatusPending
+    - StatusRunning
+    - StatusFinished
+    - StatusFailed
 info:
   contact:
     email: support@swagger.io
@@ -12,92 +42,14 @@ info:
   title: Kernel Service API
   version: "1.0"
 paths:
-  /restart:
-    post:
-      description: Restarts the kernel service
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Restart the kernel service
-      tags:
-      - Kernel
-  /set-domain:
-    post:
-      consumes:
-      - application/json
-      description: Sets the domain for the kernel service
-      parameters:
-      - description: Domain to set
-        in: body
-        name: domain
-        required: true
-        schema:
-          type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Set domain for the kernel service
-      tags:
-      - Configuration
-  /set-ip:
-    post:
-      consumes:
-      - application/json
-      description: Sets the IP plan for the kernel service
-      parameters:
-      - description: IP plan to set
-        in: body
-        name: ip_plan
-        required: true
-        schema:
-          type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Set IP plan for the kernel service
-      tags:
-      - Configuration
-  /start:
-    post:
-      description: Starts the kernel service
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Start the kernel service
-      tags:
-      - Kernel
   /status:
     get:
-      description: Returns the current status of the kernel service
+      description: Returns the current status of the kernel service (asynchronous)
       produces:
       - application/json
       responses:
-        "200":
-          description: OK
+        "202":
+          description: Accepted
           schema:
             additionalProperties:
               type: string
@@ -105,19 +57,23 @@ paths:
       summary: Get kernel service status
       tags:
       - Kernel
-  /stop:
-    post:
-      description: Stops the kernel service
+  /task/{id}:
+    get:
+      description: Returns the current status of a task
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            additionalProperties:
-              type: string
-            type: object
-      summary: Stop the kernel service
+            $ref: '#/definitions/main.Task'
+      summary: Get task status
       tags:
-      - Kernel
+      - Task
 swagger: "2.0"
